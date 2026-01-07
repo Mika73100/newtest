@@ -8,11 +8,14 @@ services:
     container_name: ${APP_ID}
     restart: unless-stopped
     ports:
-      - "${APP_PORT}:80"
+      - "${APP_PORT:-3000}:80"
+    networks:
+      - app-network
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.${APP_ID}.rule=Host(`${APP_DOMAIN}`)"
-      - "traefik.http.routers.${APP_ID}.entrypoints=websecure"
-      - "traefik.http.routers.${APP_ID}.tls.certresolver=letsencrypt"
-      - "traefik.http.services.${APP_ID}.loadbalancer.server.port=80"
+      - "runtipi.app.name=Page Web Animée"
+      - "runtipi.app.description=Page web moderne avec des animations JavaScript interactives, effets de particules et design responsive."
+
+networks:
+  app-network:
+    driver: bridge
 
