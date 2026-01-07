@@ -1,0 +1,43 @@
+name: Deploy to RunTipi
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Install dependencies (if needed)
+        run: |
+          if [ -f "package.json" ]; then
+            npm ci
+          fi
+      
+      - name: Build project (if needed)
+        run: |
+          if [ -f "package.json" ] && npm run | grep -q "build"; then
+            npm run build
+          fi
+      
+      - name: Deploy to RunTipi
+        uses: runtipi/action-deploy@latest
+        with:
+          api-key: ${{ secrets.RUNTIPI_API_KEY }}
+          project-id: ${{ secrets.RUNTIPI_PROJECT_ID }}
+          directory: ./
+          build-command: ''
+          output-directory: ./
+
