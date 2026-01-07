@@ -15,29 +15,27 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
         with:
-          node-version: '20'
+          ssh-private-key: ${{ secrets.RUNTIPI_SSH_PRIVATE_KEY }}
       
-      - name: Install dependencies (if needed)
+      - name: Deploy to RunTipi via SSH/rsync
         run: |
-          if [ -f "package.json" ]; then
-            npm ci
-          fi
+          # Créer le répertoire de destination si nécessaire
+          ssh -o StrictHostKeyChecking=no ${{ secrets.RUNTIPI_SSH_USER }}@${{ secrets.RUNTIPI_SSH_HOST }} \
+            "mkdir -p ${{ secrets.RUNTIPI_DEPLOY_PATH }}"
+          
+          # Déployer les fichiers via rsync
+          rsync -avz --delete \
+            --exclude='.git' \
+            --exclude='.github' \
+            --exclude='node_modules' \
+            --exclude='.gitignore' \
+            --exclude='README.md' \
+            ./ ${{ secrets.RUNTIPI_SSH_USER }}@${{ secrets.RUNTIPI_SSH_HOST }}:${{ secrets.RUNTIPI_DEPLOY_PATH }}/
       
-      - name: Build project (if needed)
+      - name: Deployment success
         run: |
-          if [ -f "package.json" ] && npm run | grep -q "build"; then
-            npm run build
-          fi
-      
-      - name: Deploy to RunTipi
-        uses: runtipi/action-deploy@latest
-        with:
-          api-key: ${{ secrets.RUNTIPI_API_KEY }}
-          project-id: ${{ secrets.RUNTIPI_PROJECT_ID }}
-          directory: ./
-          build-command: ''
-          output-directory: ./
+          echo "✅ Déploiement réussi sur RunTipi !"
 
