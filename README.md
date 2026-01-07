@@ -11,48 +11,66 @@ Une page web simple avec des animations JavaScript interactives.
 
 ## Déploiement sur RunTipi
 
-Ce projet est configuré pour être déployé automatiquement sur RunTipi via GitHub Actions en utilisant SSH/rsync.
+Ce projet est dockerisé et prêt à être ajouté comme application dans RunTipi.
 
-### Configuration requise
+### Structure Docker
 
-1. **Accès SSH à votre serveur RunTipi** : Assurez-vous d'avoir un accès SSH configuré sur votre instance RunTipi.
+Le projet contient les fichiers suivants pour RunTipi :
+- `Dockerfile` : Image Docker basée sur Nginx pour servir le site statique
+- `docker-compose.yml` : Configuration Docker Compose pour RunTipi
+- `config.json` : Métadonnées de l'application pour RunTipi
 
-2. **Secrets GitHub** : Ajoutez les secrets suivants dans les paramètres de votre dépôt GitHub :
-   - `RUNTIPI_SSH_PRIVATE_KEY` : Votre clé privée SSH (sans mot de passe recommandé)
-   - `RUNTIPI_SSH_USER` : Le nom d'utilisateur SSH (ex: `root`, `runtipi`, etc.)
-   - `RUNTIPI_SSH_HOST` : L'adresse IP ou le domaine de votre serveur RunTipi
-   - `RUNTIPI_DEPLOY_PATH` : Le chemin de déploiement sur le serveur (ex: `/app/www` ou `/var/www/html`)
+### Comment ajouter l'application à RunTipi
 
-3. **Génération de la clé SSH** (si vous n'en avez pas) :
-   ```bash
-   ssh-keygen -t ed25519 -C "github-actions" -f ~/.ssh/runtipi_deploy
-   ```
-   - Ajoutez la clé publique (`runtipi_deploy.pub`) au serveur RunTipi :
-     ```bash
-     ssh-copy-id -i ~/.ssh/runtipi_deploy.pub user@your-runtipi-server
-     ```
-   - Ajoutez la clé privée (`runtipi_deploy`) comme secret GitHub `RUNTIPI_SSH_PRIVATE_KEY`
+1. **Préparer votre dépôt** :
+   - Assurez-vous que votre code est sur GitHub/GitLab
+   - Vérifiez que tous les fichiers (Dockerfile, docker-compose.yml, config.json) sont présents
 
-4. **Workflow** : Le workflow se déclenche automatiquement lors d'un push sur la branche `main` ou `master`.
+2. **Ajouter l'application dans RunTipi** :
+   - Connectez-vous à votre interface RunTipi
+   - Allez dans la section "Apps" ou "Applications"
+   - Cliquez sur "Ajouter une application" ou "Add App"
+   - Sélectionnez "From Git Repository" ou "Depuis un dépôt Git"
+   - Entrez l'URL de votre dépôt Git (ex: `https://github.com/votre-username/newtest`)
+   - RunTipi détectera automatiquement les fichiers `config.json` et `docker-compose.yml`
 
-### Déploiement manuel
+3. **Configuration** :
+   - RunTipi utilisera automatiquement le `Dockerfile` pour construire l'image
+   - Le port 80 sera exposé automatiquement
+   - Traefik configurera automatiquement le reverse proxy et le SSL
 
-Vous pouvez également déclencher le déploiement manuellement via l'onglet "Actions" de GitHub.
+4. **Lancement** :
+   - Une fois l'application ajoutée, cliquez sur "Installer" ou "Install"
+   - RunTipi construira l'image Docker et démarrera le conteneur
+   - Votre site sera accessible via le domaine configuré dans RunTipi
 
-### Méthode alternative (API)
+### Personnalisation
 
-Si RunTipi fournit une API de déploiement, vous pouvez utiliser le fichier `deploy-http.yml.example` comme base.
+Vous pouvez modifier le fichier `config.json` pour :
+- Changer le nom de l'application
+- Modifier la description
+- Ajouter des champs de formulaire si nécessaire
+- Configurer des variables d'environnement
+
+### Mise à jour
+
+Pour mettre à jour l'application :
+- Poussez vos modifications vers votre dépôt Git
+- Dans RunTipi, cliquez sur "Mettre à jour" ou "Update" pour reconstruire l'image
 
 ## Structure du projet
 
 ```
 newtest/
-├── index.html      # Page principale
-├── style.css       # Styles et animations CSS
-├── script.js       # Animations JavaScript
+├── index.html          # Page principale
+├── style.css           # Styles et animations CSS
+├── script.js           # Animations JavaScript
+├── Dockerfile          # Configuration Docker
+├── docker-compose.yml  # Configuration Docker Compose pour RunTipi
+├── config.json         # Métadonnées de l'application RunTipi
 └── .github/
     └── workflows/
-        └── deploy.yml  # Workflow de déploiement
+        └── deploy.yml  # Workflow de déploiement (optionnel)
 ```
 
 ## Utilisation locale

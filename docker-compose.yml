@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ${APP_ID}
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT}:80"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.${APP_ID}.rule=Host(`${APP_DOMAIN}`)"
+      - "traefik.http.routers.${APP_ID}.entrypoints=websecure"
+      - "traefik.http.routers.${APP_ID}.tls.certresolver=letsencrypt"
+      - "traefik.http.services.${APP_ID}.loadbalancer.server.port=80"
+
