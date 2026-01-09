@@ -1,21 +1,10 @@
-version: '3.8'
+version: "3.9"
 
 services:
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: ${APP_ID}
-    restart: unless-stopped
+    image: michael73100/newtest:latest
+    container_name: newtest
     ports:
-      - "${APP_PORT:-3000}:80"
-    networks:
-      - app-network
-    labels:
-      - "runtipi.app.name=Page Web Animée"
-      - "runtipi.app.description=Page web moderne avec des animations JavaScript interactives, effets de particules et design responsive."
-
-networks:
-  app-network:
-    driver: bridge
+      - "80:80"
+    restart: unless-stopped
 
