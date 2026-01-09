@@ -1,5 +1,5 @@
 # Utiliser l'image officielle Nginx
-FROM nginx:alpine
+FROM mika73100/newtest:latest
 
 # Supprimer la configuration par défaut de Nginx
 RUN rm -rf /etc/nginx/conf.d/default.conf
