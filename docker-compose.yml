@@ -6,7 +6,7 @@ services:
     container_name: newtest_web
     restart: unless-stopped
     ports:
-      - "${APP_PORT:-3000}:3000"
+      - "${APP_PORT:-3030}:3030"
     labels:
       - "runtipi.app.name=Page Web Animée"
       - "runtipi.app.description=Page web moderne avec des animations JavaScript interactives"
