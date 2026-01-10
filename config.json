@@ -10,7 +10,7 @@
   "available": true,
   "requirements": {
     "ports": {
-      "3000": "3000"
+      "3030": "3030"
     }
   },
   "formFields": [],
