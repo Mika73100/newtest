@@ -1,9 +1,12 @@
-version: "3.9"
+version: "3.8"
 
 services:
   web:
-    build: .
+    image: michael73100/newtest:latest
     container_name: newtest_web
-    ports:
-      - "3000:3000"
     restart: unless-stopped
+    ports:
+      - "${APP_PORT:-3000}:3000"
+    labels:
+      - "runtipi.app.name=Page Web Animée"
+      - "runtipi.app.description=Page web moderne avec des animations JavaScript interactives"
