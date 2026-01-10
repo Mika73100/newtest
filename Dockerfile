@@ -16,8 +16,8 @@ COPY index.html /usr/share/nginx/html/
 COPY style.css /usr/share/nginx/html/
 COPY script.js /usr/share/nginx/html/
 
-# Exposer le port 3000
-EXPOSE 3000
+# Exposer le port 3030
+EXPOSE 3030
 
 # Commande de démarrage avec logs
-CMD ["sh", "-c", "echo 'Starting Nginx on port 3000...' && nginx -g 'daemon off;'"]
+CMD ["sh", "-c", "echo 'Starting Nginx on port 3030...' && nginx -g 'daemon off;'"]
