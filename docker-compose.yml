@@ -1,7 +1,9 @@
 version: "3.8"
 
+# Fichier de remplacement RunTipi : même nom de service "test" que le base
+# pour remplacer nginx:alpine par ton image. À coller dans "fichier de remplacement".
 services:
-  web:
+  test:
     image: michael73100/newtest:latest
     container_name: newtest_web
     restart: unless-stopped
